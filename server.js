@@ -12,6 +12,7 @@ mongoose.Promise = bluebird;
 mongoose.connect('mongodb://localhost/twitter_clone');
 
 app.use(express.static('public'));
+app.use(express.static('node_modules'));
 app.use(bodyParser.json());
 
 
