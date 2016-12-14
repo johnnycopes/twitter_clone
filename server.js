@@ -76,6 +76,7 @@ app.get('/global', (req, res) => {
 
 app.get('/profile', (req, res) => {
   // console.log(req);
+  let username = req.query.username;
   getProfile('eliastheredbearded', req, res);
   // console.log(res);
 });
@@ -83,7 +84,26 @@ app.get('/profile', (req, res) => {
 
 // Individual feed
 
-// ...code goes here...
+app.get('/feed', (req, res) => {
+  let username = req.query.username;
+  User.findById(username)
+    .then((results) => {
+      let following = results.following.concat([username]);
+      return Tweet.find({
+        user_id: {
+          $in: following
+        }
+      }).sort('timestamp');
+    })
+    .then((results) => {
+      res.json({status: 'Succesful!', results: results});
+    })
+    .catch((err) => {
+      console.log("Failed:", err.message);
+      console.log(err.errors);
+      res.json({status: "Failed", error: err.message})
+    });
+});
 
 
 
