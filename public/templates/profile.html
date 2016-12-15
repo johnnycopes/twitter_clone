@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="row">
+        <h3>Profile page</h3>
+        <h5>{{results._id}}</h5>
+        <h3>Following:</h3>
+        <ul>
+            <li class="following" ng-repeat="following in results.following">
+                <div class="u-cf u-full-width">
+                    <img class="avatar u-pull-left" src="img/tiger_face.svg" alt="Avatar">
+                    <p class="u-pull-left">{{following}}</p>
+                </div>
+            </li>
+        </ul>
+        <h3>Followers:</h3>
+        <ul>
+            <li class="follower" ng-repeat="follower in results.followers">
+                <div class="u-cf u-full-width">
+                    <img class="avatar u-pull-left" src="img/tiger_face.svg" alt="Avatar">
+                    <p class="u-pull-left">{{follower}}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+</div>

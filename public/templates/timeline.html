@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="row">
+        <h3>Timeline</h3>
+        <ul>
+            <li class="tweet" ng-repeat="tweet in results">
+                <div class="u-cf u-full-width">
+                    <img class="avatar u-pull-left" src="img/tiger_face.svg" alt="Avatar">
+                    <p class="u-pull-left">{{tweet.user_id}}</p>
+                    <p class="u-pull-right">{{tweet.timestamp}}</p>
+                </div>
+                <h5>{{tweet.text}}</h5>
+            </li>
+        </ul>
+    </div>
+
+
+</div>

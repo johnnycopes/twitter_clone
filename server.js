@@ -37,21 +37,6 @@ const User = mongoose.model('User', userSchema);
 const Tweet = mongoose.model('Tweet', tweetSchema);
 
 
-function getProfile(username, req, res) {
-  User.findById(username)
-    .then((results) => {
-      console.log('Success!');
-      console.log(results);
-      res.json({status: "Success", response: results});
-    })
-    .catch((err) => {
-      console.log('Failed:', err.message);
-      console.log(err.errors);
-      res.json({status: "Failed", error: err.message})
-    });
-}
-
-
 // ========================
 // ROUTES
 // ========================
@@ -76,16 +61,24 @@ app.get('/global', (req, res) => {
 // Profile page
 
 app.get('/profile', (req, res) => {
-  // console.log(req);
   let username = req.query.username;
-  getProfile('eliastheredbearded', req, res);
-  // console.log(res);
-});
+  User.findById(username)
+    .then((response) => {
+      console.log("Success");
+      console.log(response);
+      res.json({status: "OK", response: response})
+    })
+    .catch((err) => {
+      console.log("Failed:", err.message);
+      console.log(err.errors);
+      res.json({status: "Failed", error: err.message})
+    });
+  });
 
 
-// Individual feed
+// Individual timeline
 
-app.get('/feed', (req, res) => {
+app.get('/timeline', (req, res) => {
   let username = req.query.username;
   User.findById(username)
     .then((results) => {
@@ -94,7 +87,7 @@ app.get('/feed', (req, res) => {
         user_id: {
           $in: following
         }
-      }).sort('timestamp');
+      }).sort('-timestamp');
     })
     .then((results) => {
       res.json({status: 'Succesful!', results: results});

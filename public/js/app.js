@@ -6,6 +6,7 @@ const app = angular.module('twitter-clone', ['ui.router']);
 
 app.factory('TwitterFactory', function($http, $state) {
   let service = {};
+
   service.showGlobal = function() {
     let url = '/global';
     return $http({
@@ -13,6 +14,25 @@ app.factory('TwitterFactory', function($http, $state) {
       url: url
     });
   };
+
+  service.showProfile = function() {
+    let url = '/profile';
+    return $http({
+      method: 'GET',
+      params: {username: 'eliastheredbearded'},
+      url: url
+    });
+  };
+
+  service.showTimeline = function() {
+    let url = '/timeline';
+    return $http({
+      method: 'GET',
+      params: {username: 'eliastheredbearded'},
+      url: url
+    });
+  };
+
   return service;
 });
 
@@ -29,8 +49,15 @@ app.controller('HomeController', ($scope, $state, TwitterFactory) => {
 
 });
 
-app.controller('ProfileController', ($scope, $state, TwitterFactory) => {
-
+app.controller('ProfileController', function($scope, $state, TwitterFactory) {
+  TwitterFactory.showProfile()
+    .then(function(results) {
+      $scope.results = results.data.response;
+    })
+    .catch(function(err) {
+      console.error('Error!');
+      console.log(err.message);
+    });
 });
 
 app.controller('GlobalController', function($scope, $state, TwitterFactory) {
@@ -44,8 +71,15 @@ app.controller('GlobalController', function($scope, $state, TwitterFactory) {
     });
 });
 
-app.controller('FeedController', ($scope, $state, TwitterFactory) => {
-
+app.controller('TimelineController', function($scope, $state, TwitterFactory) {
+  TwitterFactory.showTimeline()
+    .then(function(results) {
+      $scope.results = results.data.results;
+    })
+    .catch(function(err) {
+      console.log('Error!');
+      console.log((err.message));
+    });
 });
 
 
@@ -59,13 +93,13 @@ app.config(($stateProvider, $urlRouterProvider) => {
     .state({
       name: 'home',
       url: '/',
-      templateUrl: 'img/tiger_face.svg',
+      templateUrl: '/templates/home.html',
       controller: 'HomeController'
     })
     .state({
       name: 'profile',
       url: '/profile',
-      templateUrl: 'profile.html',
+      templateUrl: '/templates/profile.html',
       controller: 'ProfileController'
     })
     .state({
@@ -75,10 +109,10 @@ app.config(($stateProvider, $urlRouterProvider) => {
       controller: 'GlobalController'
     })
     .state({
-      name: 'feed',
-      url: '/feed',
-      templateUrl: 'feed.html',
-      controller: 'FeedController'
+      name: 'timeline',
+      url: '/timeline',
+      templateUrl: '/templates/timeline.html',
+      controller: 'TimelineController'
     });
 
     $urlRouterProvider.otherwise('/');
