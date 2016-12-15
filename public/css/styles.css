@@ -11,6 +11,21 @@ ul {
   list-style: none;
 }
 
+nav {
+  text-align: center;
+}
+
+nav li {
+  display: inline-block;
+}
+
+nav li a {
+  padding: 0 2rem;
+  display: block;
+  text-decoration: none;
+  color: #FFF;
+}
+
 .tweet {
   margin: 3rem 0;
   padding: 1rem 2rem;
