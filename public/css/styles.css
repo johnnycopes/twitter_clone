@@ -46,3 +46,12 @@ nav li a {
 svg {
   fill: yellow;
 }
+
+.login,
+.signup {
+  text-align: center;
+}
+
+input {
+  color: #49274A;
+}
