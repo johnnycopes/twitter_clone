@@ -59,7 +59,7 @@ app.factory('api', function($cookies, $http, $rootScope, $state) {
     let url = '/api/profile';
     return $http({
       method: 'GET',
-      params: {username: 'eliastheredbearded'},
+      params: {username: $rootScope.user_id},
       url: url
     });
   };
@@ -77,7 +77,7 @@ app.factory('api', function($cookies, $http, $rootScope, $state) {
     let url = '/api/timeline';
     return $http({
       method: 'GET',
-      params: {username: 'eliastheredbearded'},
+      params: {username: $rootScope.user_id},
       url: url
     });
   };
@@ -126,7 +126,6 @@ app.controller('LoginController', function($scope, $state, api) {
 
 
 app.controller('ProfileController', function($scope, $state, api) {
-  let username = $rootScope.username;
   api.profile()
     .then(function(results) {
       $scope.results = results.data.response;

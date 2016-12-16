@@ -110,7 +110,6 @@ app.get('/api/profile', (req, res) => {
   User.findById(username)
     .then((response) => {
       console.log("Success");
-      console.log(response);
       res.json({status: "OK", response: response})
     })
     .catch((err) => {
@@ -152,16 +151,16 @@ app.post('/api/signup', function(req, res) {
 app.get('/api/timeline', (req, res) => {
   let username = req.query.username;
   User.findById(username)
-    .then((results) => {
-      let following = results.following.concat([username]);
+    .then((response) => {
+      let following = response.following.concat([username]);
       return Tweet.find({
         user_id: {
           $in: following
         }
       }).sort('-timestamp');
     })
-    .then((results) => {
-      res.json({status: 'Succesful!', results: results});
+    .then((response) => {
+      res.json({status: 'OK', response: response});
     })
     .catch((err) => {
       console.log("Failed:", err.message);
