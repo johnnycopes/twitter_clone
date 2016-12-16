@@ -1,8 +1,16 @@
 <div class="container">
     <div class="row">
         <h3>Timeline</h3>
+        <form ng-submit="writeTweet()">
+            <label for="tweet">Write ya tweet here, guy</label>
+            <textarea type="text" ng-model="tweet" id="tweet"></textarea>
+            <div class="btn-div">
+                <button class="button-primary" type="submit">Submit</button>
+            </div>
+        </form>
         <ul>
-            <li class="tweet" ng-repeat="tweet in results">
+            <p>{{results.user.user_id}}</p>
+            <li ng-class="{'user-tweet': tweet.user_id === user_id}" class="tweet" ng-repeat="tweet in results">
                 <div class="u-cf u-full-width">
                     <img class="avatar u-pull-left" src="img/tiger_face.svg" alt="Avatar">
                     <p class="u-pull-left">{{tweet.user_id}}</p>

@@ -1,9 +1,20 @@
 <div class="container">
     <div class="row">
-        <h3>Profile page for {{results._id}}</h3>
+        <h3>Profile page for {{results.user._id}}</h3>
+        <h3>Tweets:</h3>
+        <ul>
+            <li ng-class="{'user-tweet': tweet.user_id === user_id}" class="tweet" ng-repeat="tweet in results.tweets">
+                <div class="u-cf u-full-width">
+                    <img class="avatar u-pull-left" src="img/tiger_face.svg" alt="Avatar">
+                    <p class="u-pull-left">{{tweet.user_id}}</p>
+                    <p class="u-pull-right">{{tweet.timestamp}}</p>
+                </div>
+                <h5>{{tweet.text}}</h5>
+            </li>
+        </ul>
         <h3>Following:</h3>
         <ul>
-            <li class="following" ng-repeat="following in results.following">
+            <li class="following" ng-repeat="following in results.user.following">
                 <div class="u-cf u-full-width">
                     <img class="avatar u-pull-left" src="img/tiger_face.svg" alt="Avatar">
                     <p class="u-pull-left">{{following}}</p>
@@ -12,7 +23,7 @@
         </ul>
         <h3>Followers:</h3>
         <ul>
-            <li class="follower" ng-repeat="follower in results.followers">
+            <li class="follower" ng-repeat="follower in results.user.followers">
                 <div class="u-cf u-full-width">
                     <img class="avatar u-pull-left" src="img/tiger_face.svg" alt="Avatar">
                     <p class="u-pull-left">{{follower}}</p>

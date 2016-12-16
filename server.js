@@ -60,17 +60,17 @@ app.get('/api/global', (req, res) => {
     .then((response) => {
       console.log("Success");
       console.log(response);
-      res.json({status: "OK", response: response})
+      res.json({response: response})
     })
     .catch((err) => {
       console.log("Failed:", err.message);
       console.log(err.errors);
-      res.json({status: "Failed", error: err.message})
+      res.status('401').json({error: err.message})
     });
   });
 
 
-// Log in page
+// Login page
 
 app.post('/api/login', function(req, res) {
   // Contains key-value pairs of data dsubmitted in the request body
@@ -93,12 +93,12 @@ app.post('/api/login', function(req, res) {
       });
     })
     .then((loginData) => {
-      res.status(200).json({info: loginData});
+      res.json({info: loginData});
     })
     .catch((err) => {
       console.log("Failed:", err.message);
       console.log(err.errors);
-      res.json({status: "Failed", error: err.message})
+      res.status('401').json({error: err.message})
     });
 });
 
@@ -107,17 +107,19 @@ app.post('/api/login', function(req, res) {
 
 app.get('/api/profile', (req, res) => {
   let username = req.query.username;
-  User.findById(username)
-    .then((response) => {
-      console.log("Success");
-      res.json({status: "OK", response: response})
+
+  // Get user's tweets and followers/following
+  bluebird.all([
+    Tweet.find({user_id: username}),
+    User.findById(username)
+  ]).spread(function(tweets, user) {
+    res.json({
+      tweets: tweets,
+      user: user
     })
-    .catch((err) => {
-      console.log("Failed:", err.message);
-      console.log(err.errors);
-      res.json({status: "Failed", error: err.message})
-    });
   });
+
+});
 
 
 // Signup page
@@ -143,6 +145,7 @@ app.post('/api/signup', function(req, res) {
       console.log(err);
       res.status(401).json({status: "Failed", error: err.message, stack: err.stack});
     });
+
 });
 
 
@@ -160,16 +163,32 @@ app.get('/api/timeline', (req, res) => {
       }).sort('-timestamp');
     })
     .then((response) => {
-      res.json({status: 'OK', response: response});
+      res.json({response: response});
     })
     .catch((err) => {
       console.log("Failed:", err.message);
       console.log(err.errors);
-      res.json({status: "Failed", error: err.message})
+      res.status('401').json({error: err.message})
     });
 });
 
 
+app.post('/api/timeline', (req, res) => {
+  let userInfo = req.body;
+  console.log(userInfo);
+  Tweet.create({
+    user_id: userInfo.user_id, // refers to user model id (the username)
+    text: userInfo.text,
+    timestamp: new Date
+  })
+  .then()
+  .catch((err) => {
+    console.log("Failed:", err.message);
+    console.log("Failed:", err.errors);
+    res.status('401').json({error: err.message})
+  });
+  console.log(userInfo);
+});
 
 
 

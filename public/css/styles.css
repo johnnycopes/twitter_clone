@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   background: #94618E;;
   color: #f1f3f5;
@@ -28,12 +32,22 @@ nav li a {
 
 .tweet {
   margin: 3rem 0;
-  padding: 1rem 2rem;
+  padding: 2rem;
   background: #f1f3f5;
+  border: 5px solid #f1f3f5;
+}
+
+.user-tweet {
+  border: 5px solid #49274A;
+}
+
+.tweet h5 {
+  margin: 0;
 }
 
 .tweet h5,
-.tweet p {
+.tweet p,
+textarea {
   color: #49274A;
 }
 

@@ -82,6 +82,19 @@ app.factory('api', function($cookies, $http, $rootScope, $state) {
     });
   };
 
+  service.writeTweet = function(message) {
+    let url = '/api/timeline';
+    let data = {
+      user_id: $rootScope.user_id,
+      text: message,
+    };
+    return $http({
+      method: 'POST',
+      data: data,
+      url: url
+    });
+  }
+
   return service;
 });
 
@@ -128,7 +141,7 @@ app.controller('LoginController', function($scope, $state, api) {
 app.controller('ProfileController', function($scope, $state, api) {
   api.profile()
     .then(function(results) {
-      $scope.results = results.data.response;
+      $scope.results = results.data;
     })
     .catch(function(err) {
       console.error('Error!');
@@ -164,12 +177,30 @@ app.controller('SignupController', function($scope, $state, api) {
 app.controller('TimelineController', function($scope, $state, api) {
   api.timeline()
     .then(function(results) {
-      $scope.results = results.data.results;
+      $scope.results = results.data.response;
     })
     .catch(function(err) {
       console.log('Error!');
       console.log((err.message));
     });
+
+  $scope.writeTweet = function() {
+    let message = $scope.tweet;
+    api.writeTweet(message)
+      .then(function(results) {
+        return results;
+      })
+      // .then(function() {
+      //   return api.login(data);
+      // })
+      // .then(function() {
+      //   $state.go('global');
+      // })
+      .catch(function(err) {
+        console.log('Failed: ', err.stack);
+      });
+  };
+
 });
 
 
