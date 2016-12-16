@@ -7,11 +7,25 @@ const app = angular.module('twitter-clone', ['ui.router', 'ngCookies']);
 app.factory('api', function($cookies, $http, $rootScope, $state) {
   let service = {};
 
-  // if (!$cookies.getObject('cookie_data')) {}
-  //
-  // service.logout = function() {
-  //   remove
-  // };
+  // set cookie data to username or guest
+  if (!$cookies.getObject('cookieData')) {
+    $rootScope.displayName = null;
+    $rootScope.loggedIn = false;
+  }
+  else {
+    let cookie = $cookies.getObject('cookieData');
+    $rootScope.displayName = cookie.username;
+    $rootScope.token = cookie.token;
+    $rootScope.loggedIn = true;
+  }
+  // logout
+  $rootScope.logout = function() {
+    $cookies.remove('cookieData');
+    $rootScope.username = null;
+    $rootScope.token = null;
+    $rootScope.loggedIn = false;
+    $state.go('home');
+  };
 
   service.showGlobal = function() {
     let url = '/api/global';
@@ -85,7 +99,7 @@ app.controller('GlobalController', function($scope, $state, api) {
 });
 
 
-app.controller('HomeController', ($scope, $state, api) => {
+app.controller('HomeController', function($scope, $state, api) {
 
 });
 

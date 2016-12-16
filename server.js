@@ -77,7 +77,7 @@ app.post('/api/login', function(req, res) {
   // Contains key-value pairs of data dsubmitted in the request body
   let userInfo = req.body;
 
-  // Dig into the db for that sweet info
+  // Dig into the db for that sweet, sweet info
   User.findById(userInfo.username)
     .then((response) => {
       console.log('response:',response);
@@ -94,8 +94,12 @@ app.post('/api/login', function(req, res) {
         timestamp: expiration
       });
     })
-    .then((login) => {
-      res.status(200).json({status: 'Success', info: login});
+    .then((loginData) => {
+      // res.status(200).json({info: login});
+      $cookies.putObject('cookieData', loginData);
+      $rootScope.username = loginData.username;
+      $rootScope.token = loginData.token;
+      $rootScope.loggedIn = true;
     })
     .catch((err) => {
       console.log("Failed:", err.message);
