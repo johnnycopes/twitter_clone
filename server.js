@@ -14,8 +14,7 @@ mongoose.Promise = bluebird;
 mongoose.connect('mongodb://localhost/twitter_clone');
 
 // When true, prints out every command sent to db in MongoDB format
-mongoose.set('debug', true)
-
+mongoose.set('debug', true);
 app.use(express.static('public'));
 app.use(express.static('node_modules'));
 app.use(bodyParser.json());
@@ -80,13 +79,12 @@ app.post('/api/login', function(req, res) {
   // Dig into the db for that sweet, sweet info
   User.findById(userInfo.username)
     .then((response) => {
-      console.log('response:',response);
       return bcrypt.compare(userInfo.password, response.password);
     })
     .then(() => {
-      var token = uuid();
-      var username = userInfo.username;
-      var expiration = new Date;
+      let token = uuid();
+      let username = userInfo.username;
+      let expiration = new Date;
       expiration.setDate(expiration.getDate() + 30);
       return Token.create({
         user_id: username,
@@ -95,35 +93,13 @@ app.post('/api/login', function(req, res) {
       });
     })
     .then((loginData) => {
-      // res.status(200).json({info: login});
-      $cookies.putObject('cookieData', loginData);
-      $rootScope.username = loginData.username;
-      $rootScope.token = loginData.token;
-      $rootScope.loggedIn = true;
+      res.status(200).json({info: loginData});
     })
     .catch((err) => {
       console.log("Failed:", err.message);
       console.log(err.errors);
       res.json({status: "Failed", error: err.message})
     });
-
-  // Encrypts the new user's password and stores it in a hash variable
-  // bcrypt.hash(userInfo.password, 12)
-  //   .then(function(hashedPassword) {
-  //     return User.create({
-  //       email: userInfo.email,
-  //       _id: userInfo.username,
-  //       password: hashedPassword
-  //     });
-  //   })
-  //   .then(function() {
-  //     res.status(200).json({status: "Success"});
-  //   })
-  //   .catch(function(err) {
-  //     console.error('Error!');
-  //     console.log(err);
-  //     res.status(401).json({status: "Failed", error: err.message});
-  //   });
 });
 
 

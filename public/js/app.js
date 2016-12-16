@@ -4,30 +4,36 @@ const app = angular.module('twitter-clone', ['ui.router', 'ngCookies']);
 // SERVICE
 // ========================
 
+
 app.factory('api', function($cookies, $http, $rootScope, $state) {
   let service = {};
+  $rootScope.jebus = 'save me jebus';
+
+  function setRootScopeLoginData() {
+    let cookie = $cookies.getObject('cookieData');
+    $rootScope.user_id = cookie.user_id;
+    $rootScope.token = cookie.token;
+    $rootScope.loggedIn = true;
+  }
 
   // set cookie data to username or guest
   if (!$cookies.getObject('cookieData')) {
-    $rootScope.displayName = null;
+    $rootScope.user_id = null;
     $rootScope.loggedIn = false;
   }
   else {
-    let cookie = $cookies.getObject('cookieData');
-    $rootScope.displayName = cookie.username;
-    $rootScope.token = cookie.token;
-    $rootScope.loggedIn = true;
+    setRootScopeLoginData();
   }
   // logout
   $rootScope.logout = function() {
     $cookies.remove('cookieData');
-    $rootScope.username = null;
+    $rootScope.user_id = null;
     $rootScope.token = null;
     $rootScope.loggedIn = false;
     $state.go('home');
   };
 
-  service.showGlobal = function() {
+  service.global = function() {
     let url = '/api/global';
     return $http({
       method: 'GET',
@@ -35,7 +41,7 @@ app.factory('api', function($cookies, $http, $rootScope, $state) {
     });
   };
 
-  service.showLogin = function(data) {
+  service.login = function(data) {
     let url = '/api/login';
     return $http({
       method: 'POST',
@@ -43,15 +49,13 @@ app.factory('api', function($cookies, $http, $rootScope, $state) {
       url: url
     })
     .then(function(loggedIn) {
-      // Put information to be stored as cookies here
-      $cookies.putObject('username', loggedIn.data.info.user_id);
-      $cookies.putObject('token', loggedIn.data.info.token);
-      $cookies.putObject('expiry', loggedIn.data.info.timestamp);
-      console.log('Info: ', loggedIn.data.info);
+      // Store cookie and update login state variables
+      $cookies.putObject('cookieData', loggedIn.data.info);
+      setRootScopeLoginData();
     });
   };
 
-  service.showProfile = function() {
+  service.profile = function() {
     let url = '/api/profile';
     return $http({
       method: 'GET',
@@ -60,7 +64,7 @@ app.factory('api', function($cookies, $http, $rootScope, $state) {
     });
   };
 
-  service.showSignup = function(data) {
+  service.signup = function(data) {
     let url = '/api/signup';
     return $http({
       method: 'POST',
@@ -69,7 +73,7 @@ app.factory('api', function($cookies, $http, $rootScope, $state) {
     });
   };
 
-  service.showTimeline = function() {
+  service.timeline = function() {
     let url = '/api/timeline';
     return $http({
       method: 'GET',
@@ -88,7 +92,7 @@ app.factory('api', function($cookies, $http, $rootScope, $state) {
 // ========================
 
 app.controller('GlobalController', function($scope, $state, api) {
-  api.showGlobal()
+  api.global()
     .then(function(results) {
       $scope.results = results.data.response;
     })
@@ -110,7 +114,7 @@ app.controller('LoginController', function($scope, $state, api) {
       username: $scope.username,
       password: $scope.password
     };
-    api.showLogin(data)
+    api.login(data)
       .then(function() {
         $state.go('profile');
       })
@@ -121,9 +125,9 @@ app.controller('LoginController', function($scope, $state, api) {
 });
 
 
-app.controller('ProfileController', function($scope, $state, $stateParams, api) {
-  let username = $stateParams.username;
-  api.showProfile()
+app.controller('ProfileController', function($scope, $state, api) {
+  let username = $rootScope.username;
+  api.profile()
     .then(function(results) {
       $scope.results = results.data.response;
     })
@@ -141,12 +145,12 @@ app.controller('SignupController', function($scope, $state, api) {
       email: $scope.email,
       password: $scope.password
     };
-    api.showSignup(data)
+    api.signup(data)
       .then(function(results) {
         return results;
       })
       .then(function() {
-        return api.showLogin(data);
+        return api.login(data);
       })
       .then(function() {
         $state.go('global');
@@ -159,7 +163,7 @@ app.controller('SignupController', function($scope, $state, api) {
 
 
 app.controller('TimelineController', function($scope, $state, api) {
-  api.showTimeline()
+  api.timeline()
     .then(function(results) {
       $scope.results = results.data.results;
     })
