@@ -56,7 +56,7 @@ const Token = mongoose.model('Token', tokenSchema);
 
 // General timeline
 
-app.get('/global', (req, res) => {
+app.get('/api/global', (req, res) => {
   Tweet.find({})
     .then((response) => {
       console.log("Success");
@@ -73,7 +73,7 @@ app.get('/global', (req, res) => {
 
 // Log in page
 
-app.post('/login', function(req, res) {
+app.post('/api/login', function(req, res) {
   // Contains key-value pairs of data dsubmitted in the request body
   let userInfo = req.body;
 
@@ -125,7 +125,7 @@ app.post('/login', function(req, res) {
 
 // Profile page
 
-app.get('/profile', (req, res) => {
+app.get('/api/profile', (req, res) => {
   let username = req.query.username;
   User.findById(username)
     .then((response) => {
@@ -143,7 +143,7 @@ app.get('/profile', (req, res) => {
 
 // Signup page
 
-app.post('/signup', function(req, res) {
+app.post('/api/signup', function(req, res) {
   // Contains key-value pairs of data dsubmitted in the request body
   let userInfo = req.body;
 
@@ -162,14 +162,14 @@ app.post('/signup', function(req, res) {
     .catch(function(err) {
       console.error('Error!');
       console.log(err);
-      res.status(401).json({status: "Failed", error: err.message});
+      res.status(401).json({status: "Failed", error: err.message, stack: err.stack});
     });
 });
 
 
 // Individual timeline
 
-app.get('/timeline', (req, res) => {
+app.get('/api/timeline', (req, res) => {
   let username = req.query.username;
   User.findById(username)
     .then((results) => {

@@ -1,11 +1,14 @@
 <div class="container signup">
     <h1>Sign Up</h1>
-    <form class="" action="index.html" method="post">
+    <form ng-submit="signUp()" method="post">
         <label for="email">Email</label>
-        <input type="email" name="email" id="email">
+        <input ng-model="email" type="email" name="email" id="email">
         <label for="username">Username</label>
-        <input type="text" name="username" id="username">
+        <input ng-model="username" type="text" name="username" id="username">
         <label for="password">Password</label>
-        <input type="password" name="password" id="password">
+        <input ng-model="password" type="password" name="password" id="password">
+        <div class="btn-div">
+            <button type="sumbit" class="button-primary">Sign Up</button>
+        </div>
     </form>
 </div>

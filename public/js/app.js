@@ -1,22 +1,44 @@
-const app = angular.module('twitter-clone', ['ui.router']);
+const app = angular.module('twitter-clone', ['ui.router', 'ngCookies']);
 
 // ========================
 // SERVICE
 // ========================
 
-app.factory('TwitterFactory', function($http, $state) {
+app.factory('api', function($cookies, $http, $rootScope, $state) {
   let service = {};
 
+  // if (!$cookies.getObject('cookie_data')) {}
+  //
+  // service.logout = function() {
+  //   remove
+  // };
+
   service.showGlobal = function() {
-    let url = '/global';
+    let url = '/api/global';
     return $http({
       method: 'GET',
       url: url
     });
   };
 
+  service.showLogin = function(data) {
+    let url = '/api/login';
+    return $http({
+      method: 'POST',
+      data: data,
+      url: url
+    })
+    .then(function(loggedIn) {
+      // Put information to be stored as cookies here
+      $cookies.putObject('username', loggedIn.data.info.user_id);
+      $cookies.putObject('token', loggedIn.data.info.token);
+      $cookies.putObject('expiry', loggedIn.data.info.timestamp);
+      console.log('Info: ', loggedIn.data.info);
+    });
+  };
+
   service.showProfile = function() {
-    let url = '/profile';
+    let url = '/api/profile';
     return $http({
       method: 'GET',
       params: {username: 'eliastheredbearded'},
@@ -24,8 +46,17 @@ app.factory('TwitterFactory', function($http, $state) {
     });
   };
 
+  service.showSignup = function(data) {
+    let url = '/api/signup';
+    return $http({
+      method: 'POST',
+      data: data,
+      url: url
+    });
+  };
+
   service.showTimeline = function() {
-    let url = '/timeline';
+    let url = '/api/timeline';
     return $http({
       method: 'GET',
       params: {username: 'eliastheredbearded'},
@@ -38,13 +69,12 @@ app.factory('TwitterFactory', function($http, $state) {
 
 
 
-
 // ========================
 // CONTROLLERS
 // ========================
 
-app.controller('GlobalController', function($scope, $state, TwitterFactory) {
-  TwitterFactory.showGlobal()
+app.controller('GlobalController', function($scope, $state, api) {
+  api.showGlobal()
     .then(function(results) {
       $scope.results = results.data.response;
     })
@@ -55,16 +85,31 @@ app.controller('GlobalController', function($scope, $state, TwitterFactory) {
 });
 
 
-app.controller('HomeController', ($scope, $state, TwitterFactory) => {
+app.controller('HomeController', ($scope, $state, api) => {
 
 });
 
-app.controller('LoginController', function($scope, $state, TwitterFactory) {
 
+app.controller('LoginController', function($scope, $state, api) {
+  $scope.login = function() {
+    let data = {
+      username: $scope.username,
+      password: $scope.password
+    };
+    api.showLogin(data)
+      .then(function() {
+        $state.go('profile');
+      })
+      .catch(function(err) {
+        console.log('Failed:', err.message);
+      });
+  };
 });
 
-app.controller('ProfileController', function($scope, $state, TwitterFactory) {
-  TwitterFactory.showProfile()
+
+app.controller('ProfileController', function($scope, $state, $stateParams, api) {
+  let username = $stateParams.username;
+  api.showProfile()
     .then(function(results) {
       $scope.results = results.data.response;
     })
@@ -75,12 +120,32 @@ app.controller('ProfileController', function($scope, $state, TwitterFactory) {
 });
 
 
-app.controller('SignupController', function($scope, $state, TwitterFactory) {
-
+app.controller('SignupController', function($scope, $state, api) {
+  $scope.signUp = function() {
+    let data = {
+      username: $scope.username,
+      email: $scope.email,
+      password: $scope.password
+    };
+    api.showSignup(data)
+      .then(function(results) {
+        return results;
+      })
+      .then(function() {
+        return api.showLogin(data);
+      })
+      .then(function() {
+        $state.go('global');
+      })
+      .catch(function(err) {
+        console.log('Failed: ', err.stack);
+      });
+  };
 });
 
-app.controller('TimelineController', function($scope, $state, TwitterFactory) {
-  TwitterFactory.showTimeline()
+
+app.controller('TimelineController', function($scope, $state, api) {
+  api.showTimeline()
     .then(function(results) {
       $scope.results = results.data.results;
     })
@@ -89,7 +154,6 @@ app.controller('TimelineController', function($scope, $state, TwitterFactory) {
       console.log((err.message));
     });
 });
-
 
 
 // ========================
@@ -105,22 +169,22 @@ app.config(($stateProvider, $urlRouterProvider) => {
       controller: 'HomeController'
     })
     .state({
-      name: 'profile',
-      url: '/profile',
-      templateUrl: '/templates/profile.html',
-      controller: 'ProfileController'
-    })
-    .state({
       name: 'global',
       url: '/global',
       templateUrl: '/templates/global.html',
       controller: 'GlobalController'
     })
     .state({
-      name: 'timeline',
-      url: '/timeline',
-      templateUrl: '/templates/timeline.html',
-      controller: 'TimelineController'
+      name: 'login',
+      url: '/login',
+      templateUrl: '/templates/login.html',
+      controller: 'LoginController'
+    })
+    .state({
+      name: 'profile',
+      url: '/profile',
+      templateUrl: '/templates/profile.html',
+      controller: 'ProfileController'
     })
     .state({
       name: 'signup',
@@ -129,12 +193,10 @@ app.config(($stateProvider, $urlRouterProvider) => {
       controller: 'SignupController'
     })
     .state({
-      name: 'login',
-      url: '/login',
-      templateUrl: '/templates/login.html',
-      controller: 'LoginController'
-    })
-    ;
-
+      name: 'timeline',
+      url: '/timeline',
+      templateUrl: '/templates/timeline.html',
+      controller: 'TimelineController'
+    });
     $urlRouterProvider.otherwise('/');
 });
