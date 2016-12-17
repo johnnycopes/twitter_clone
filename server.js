@@ -105,8 +105,9 @@ app.post('/api/login', function(req, res) {
 
 // Profile page
 
-app.get('/api/profile', (req, res) => {
-  let username = req.query.username;
+app.get('/api/profile/:userID', (req, res) => {
+  // let username = req.query.username;
+  let username = req.params.userID
 
   // Get user's tweets and followers/following
   bluebird.all([

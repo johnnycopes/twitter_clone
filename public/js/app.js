@@ -55,14 +55,17 @@ app.factory('api', function($cookies, $http, $rootScope, $state) {
     });
   };
 
-  service.profile = function() {
-    let url = '/api/profile';
+  service.profile = function(userID) {
+    let url = '/api/profile/' + userID;
     return $http({
       method: 'GET',
-      params: {username: $rootScope.user_id},
       url: url
     });
   };
+
+  // service.search = function() {
+  //
+  // }
 
   service.signup = function(data) {
     let url = '/api/signup';
@@ -138,8 +141,8 @@ app.controller('LoginController', function($scope, $state, api) {
 });
 
 
-app.controller('ProfileController', function($scope, $state, api) {
-  api.profile()
+app.controller('ProfileController', function($scope, $state, $stateParams, api) {
+  api.profile($stateParams.userID)
     .then(function(results) {
       $scope.results = results.data;
     })
@@ -232,7 +235,7 @@ app.config(($stateProvider, $urlRouterProvider) => {
     })
     .state({
       name: 'profile',
-      url: '/profile',
+      url: '/profile/{userID}',
       templateUrl: '/templates/profile.html',
       controller: 'ProfileController'
     })

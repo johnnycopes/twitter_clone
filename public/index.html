@@ -19,12 +19,23 @@
             <li><a ui-sref="home">Home</a></li>
             <li><a ui-sref="global">Global</a></li>
             <li><a ui-sref="timeline">Timeline</a></li>
-            <li><a ui-sref="profile">Profile</a></li>
+            <li><a ui-sref="profile({userID: user_id})">My profile</a></li>
             <li><a ui-sref="login">Log In</a></li>
             <li><a ui-sref="signup">Sign Up</a></li>
             <li><a ng-click="logout()">Log Out</a></li>
         </ul>
     </nav>
+
+    <div class="search-div">
+        <label for="search">Look up a user:</label>
+        <input ng-model="search" type="text" id="search">
+        <div class="btn-div">
+            <a ui-sref="profile({userID: search})">
+              <button class="button-primary">Search</button>
+            </a>
+        </div>
+    </div>
+
     <ui-view></ui-view>
     <script src="angular/angular.js"></script>
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script> -->

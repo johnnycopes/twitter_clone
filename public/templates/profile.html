@@ -6,7 +6,7 @@
             <li ng-class="{'user-tweet': tweet.user_id === user_id}" class="tweet" ng-repeat="tweet in results.tweets">
                 <div class="u-cf u-full-width">
                     <img class="avatar u-pull-left" src="img/tiger_face.svg" alt="Avatar">
-                    <p class="u-pull-left">{{tweet.user_id}}</p>
+                    <a ui-sref="profile({userID: tweet.user_id})" class="u-pull-left">{{tweet.user_id}}</a>
                     <p class="u-pull-right">{{tweet.timestamp | date:'dd MMM yyyy | hh:mm:ss a'}}</p>
                 </div>
                 <h5>{{tweet.text}}</h5>
@@ -17,7 +17,7 @@
             <li class="following" ng-repeat="following in results.user.following">
                 <div class="u-cf u-full-width">
                     <img class="avatar u-pull-left" src="img/tiger_face.svg" alt="Avatar">
-                    <p class="u-pull-left">{{following}}</p>
+                    <a ui-sref="profile({userID: following})" class="u-pull-left">{{following}}</a>
                 </div>
             </li>
         </ul>
@@ -26,7 +26,7 @@
             <li class="follower" ng-repeat="follower in results.user.followers">
                 <div class="u-cf u-full-width">
                     <img class="avatar u-pull-left" src="img/tiger_face.svg" alt="Avatar">
-                    <p class="u-pull-left">{{follower}}</p>
+                    <a ui-sref="profile({userID: follower})" class="u-pull-left">{{follower}}</a>
                 </div>
             </li>
         </ul>
