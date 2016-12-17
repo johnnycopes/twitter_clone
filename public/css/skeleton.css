@@ -51,7 +51,8 @@
 /* For devices larger than 550px */
 @media (min-width: 550px) {
   .container {
-    width: 80%; }
+    width: 50%;
+    min-width: 700px; }
   .column,
   .columns {
     margin-left: 4%; }
@@ -75,6 +76,8 @@
 
   .one-third.column               { width: 30.6666666667%; }
   .two-thirds.column              { width: 65.3333333333%; }
+  .one-quarter.column             { width: 25%; }
+  .three-quarters.column          { width: 75%; }
 
   .one-half.column                { width: 48%; }
 
@@ -112,6 +115,11 @@
 
 }
 
+/* For devices larger than 768px */
+/*@media (min-width: 750px) {
+  .container {
+    width: 50%; }*/
+
 
 /* Base Styles
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -124,7 +132,7 @@ body {
   font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
   line-height: 1.6;
   font-weight: 400;
-  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Nunito Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #222; }
 
 

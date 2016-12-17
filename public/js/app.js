@@ -7,7 +7,6 @@ const app = angular.module('twitter-clone', ['ui.router', 'ngCookies']);
 
 app.factory('api', function($cookies, $http, $rootScope, $state) {
   let service = {};
-  $rootScope.jebus = 'save me jebus';
 
   function setRootScopeLoginData() {
     let cookie = $cookies.getObject('cookieData');

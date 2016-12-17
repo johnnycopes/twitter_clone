@@ -1,6 +1,13 @@
 <div class="container">
     <div class="row">
-        <h3>Global feed</h3>
+        <h2>Global Feed</h2>
+        <div class="search-div tac">
+            <label for="search">Look up a name here:</label>
+            <input ng-model="search" type="text" id="search">
+            <div class="btn-div">
+              <button ui-sref="profile({userID: search})" class="button-primary">Search</button>
+            </div>
+        </div>
         <ul>
             <li ng-class="{'user-tweet': tweet.user_id === user_id}" class="tweet" ng-repeat="tweet in results">
                 <div class="u-cf u-full-width">

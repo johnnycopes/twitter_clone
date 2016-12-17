@@ -1,14 +1,16 @@
-<div class="container">
+<div class="container timeline">
     <div class="row">
-        <h3>Timeline</h3>
-        <form ng-submit="writeTweet()">
-            <label for="tweet">Write ya tweet here, guy</label>
-            <textarea type="text" ng-model="tweet" id="tweet"></textarea>
-            <div class="btn-div">
-                <button class="button-primary" type="submit">Submit</button>
+        <h2>Let your roar be heard</h2>
+        <form ng-submit="writeTweet()" class="twelve columns row">
+            <label for="tweet">Write some text in the box:</label>
+            <div class="one-line-spaced-out">
+                <textarea type="text" ng-model="tweet" id="tweet"></textarea>
+                <button class="button-primary" type="submit">Roar</button>
             </div>
         </form>
-        <ul>
+    </div>
+    <div class="row">
+        <ul class="twelve columns">
             <p>{{results.user.user_id}}</p>
             <li ng-class="{'user-tweet': tweet.user_id === user_id}" class="tweet" ng-repeat="tweet in results">
                 <div class="u-cf u-full-width">

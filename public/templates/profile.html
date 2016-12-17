@@ -1,7 +1,43 @@
-<div class="container">
+<div class="container profile">
+    <div class="summary row tac">
+        <h2 class="twelve columns">{{results.user._id}}</h2>
+        <div class="row">
+            <div class="eight columns row">
+                <p class="four columns">{{results.tweets.length}} roars</p>
+                <p class="four columns">{{results.user.following.length}} following</p>
+                <p class="four columns">{{results.user.followers.length}} followers</p>
+            </div>
+
+            <div class="btn-div four-columns">
+                <button class="button-primary">Roll with this cat</button>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="row">
+        <div class="six columns">
+            <h3>Following ({{results.user.following.length}})</h3>
+            <ul>
+                <li class="following" ng-repeat="following in results.user.following">
+                    <div class="u-cf u-full-width">
+                        <img class="avatar u-pull-left" src="img/tiger_face.svg" alt="Avatar">
+                        <a ui-sref="profile({userID: following})" class="u-pull-left">{{following}}</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="six columns">
+            <h3>Followers ({{results.user.followers.length}})</h3>
+            <ul>
+                <li class="follower" ng-repeat="follower in results.user.followers">
+                    <div class="u-cf u-full-width">
+                        <img class="avatar u-pull-left" src="img/tiger_face.svg" alt="Avatar">
+                        <a ui-sref="profile({userID: follower})" class="u-pull-left">{{follower}}</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div> -->
     <div class="row">
-        <h3>Profile page for {{results.user._id}}</h3>
-        <h3>Tweets:</h3>
         <ul>
             <li ng-class="{'user-tweet': tweet.user_id === user_id}" class="tweet" ng-repeat="tweet in results.tweets">
                 <div class="u-cf u-full-width">
@@ -10,24 +46,6 @@
                     <p class="u-pull-right">{{tweet.timestamp | date:'dd MMM yyyy | hh:mm:ss a'}}</p>
                 </div>
                 <h5>{{tweet.text}}</h5>
-            </li>
-        </ul>
-        <h3>Following:</h3>
-        <ul>
-            <li class="following" ng-repeat="following in results.user.following">
-                <div class="u-cf u-full-width">
-                    <img class="avatar u-pull-left" src="img/tiger_face.svg" alt="Avatar">
-                    <a ui-sref="profile({userID: following})" class="u-pull-left">{{following}}</a>
-                </div>
-            </li>
-        </ul>
-        <h3>Followers:</h3>
-        <ul>
-            <li class="follower" ng-repeat="follower in results.user.followers">
-                <div class="u-cf u-full-width">
-                    <img class="avatar u-pull-left" src="img/tiger_face.svg" alt="Avatar">
-                    <a ui-sref="profile({userID: follower})" class="u-pull-left">{{follower}}</a>
-                </div>
             </li>
         </ul>
     </div>

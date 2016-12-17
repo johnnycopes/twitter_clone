@@ -111,7 +111,7 @@ app.get('/api/profile/:userID', (req, res) => {
 
   // Get user's tweets and followers/following
   bluebird.all([
-    Tweet.find({user_id: username}),
+    Tweet.find({user_id: username}).sort('-timestamp'),
     User.findById(username)
   ]).spread(function(tweets, user) {
     res.json({
