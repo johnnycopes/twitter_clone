@@ -187,8 +187,10 @@ app.controller('TimelineController', function($scope, $state, api) {
   $scope.writeTweet = function() {
     let message = $scope.tweet;
     api.writeTweet(message)
-      .then(function(results) {
-        return results;
+      .then(function() {
+        console.log('front-end post successful');
+        $scope.tweet = '';
+        $state.go($state.current, {}, {reload: true});
       })
       // .then(function() {
       //   return api.login(data);

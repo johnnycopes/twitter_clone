@@ -56,7 +56,7 @@ const Token = mongoose.model('Token', tokenSchema);
 // General timeline
 
 app.get('/api/global', (req, res) => {
-  Tweet.find({})
+  Tweet.find({}).sort('-timestamp')
     .then((response) => {
       console.log("Success");
       console.log(response);
@@ -173,21 +173,25 @@ app.get('/api/timeline', (req, res) => {
 });
 
 
+// Post a tweet
+
 app.post('/api/timeline', (req, res) => {
   let userInfo = req.body;
-  console.log(userInfo);
   Tweet.create({
     user_id: userInfo.user_id, // refers to user model id (the username)
     text: userInfo.text,
     timestamp: new Date
   })
-  .then()
+  .then((response) => {
+    // reload state after successful post
+    res.json(response);
+    console.log('good on the back-end');
+  })
   .catch((err) => {
     console.log("Failed:", err.message);
     console.log("Failed:", err.errors);
     res.status('401').json({error: err.message})
   });
-  console.log(userInfo);
 });
 
 
