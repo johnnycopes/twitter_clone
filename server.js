@@ -72,7 +72,7 @@ app.get('/api/global', (req, res) => {
 
 // Login page
 
-app.post('/api/login', function(req, res) {
+app.post('/api/login', (req, res) => {
   // Contains key-value pairs of data dsubmitted in the request body
   let userInfo = req.body;
 
@@ -105,10 +105,9 @@ app.post('/api/login', function(req, res) {
 
 // Profile page
 
+// Load page based on userID
 app.get('/api/profile/:userID', (req, res) => {
-  // let username = req.query.username;
   let username = req.params.userID
-
   // Get user's tweets and followers/following
   bluebird.all([
     Tweet.find({user_id: username}).sort('-timestamp'),
@@ -119,16 +118,59 @@ app.get('/api/profile/:userID', (req, res) => {
       user: user
     })
   });
+});
 
+app.post('/api/modifyFollowStatus', (req, res) => {
+  let usersInfo = req.body;
+  // Follow target user
+  console.log(usersInfo);
+  console.log(usersInfo.isFollowing);
+  if (!usersInfo.isFollowing) {
+    bluebird.all([
+      User.findByIdAndUpdate(
+        { _id: usersInfo.userToFollow }, // (value of _id in db)
+        { $push: {followers: usersInfo.userLoggedIn} } // (value to update)
+      ),
+      User.findByIdAndUpdate(
+        { _id: usersInfo.userLoggedIn },
+        { $push: {following: usersInfo.userToFollow} }
+      )
+      ]).spread((user) => {
+        res.json(user);
+      })
+      .catch(function(err) {
+        console.error('Error!');
+        console.log(err);
+        res.status(401).json({status: "Failed", error: err.message, stack: err.stack});
+      });
+  }
+  else {
+    bluebird.all([
+      User.update(
+        { _id: usersInfo.userToFollow }, // (value of _id in db)
+        { $pull: {followers: usersInfo.userLoggedIn} } // (value to update)
+      ),
+      User.update(
+        { _id: usersInfo.userLoggedIn },
+        { $pull: {following: usersInfo.userToFollow} }
+      )
+      ]).spread((user) => {
+        res.json(user);
+      })
+      .catch(function(err) {
+        console.error('Error!');
+        console.log(err);
+        res.status(401).json({status: "Failed", error: err.message, stack: err.stack});
+      });
+  }
 });
 
 
 // Signup page
 
-app.post('/api/signup', function(req, res) {
-  // Contains key-value pairs of data dsubmitted in the request body
+app.post('/api/signup', (req, res) => {
+  // Contains key-value pairs of data submitted in the request body
   let userInfo = req.body;
-
   // Encrypts the new user's password and stores it in a hash variable
   bcrypt.hash(userInfo.password, 12)
     .then(function(hashedPassword) {
@@ -146,7 +188,6 @@ app.post('/api/signup', function(req, res) {
       console.log(err);
       res.status(401).json({status: "Failed", error: err.message, stack: err.stack});
     });
-
 });
 
 

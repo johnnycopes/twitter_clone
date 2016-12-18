@@ -54,6 +54,15 @@ app.factory('api', function($cookies, $http, $rootScope, $state) {
     });
   };
 
+  service.modifyFollowStatus = function(data) {
+    let url = '/api/modifyFollowStatus';
+    return $http({
+      method: 'POST',
+      data: data,
+      url: url
+    });
+  };
+
   service.profile = function(userID) {
     let url = '/api/profile/' + userID;
     return $http({
@@ -61,10 +70,6 @@ app.factory('api', function($cookies, $http, $rootScope, $state) {
       url: url
     });
   };
-
-  // service.search = function() {
-  //
-  // }
 
   service.signup = function(data) {
     let url = '/api/signup';
@@ -131,7 +136,7 @@ app.controller('LoginController', function($scope, $state, api) {
     };
     api.login(data)
       .then(function() {
-        $state.go('profile');
+        $state.go('profile' + data.username);
       })
       .catch(function(err) {
         console.log('Failed:', err.message);
@@ -140,15 +145,36 @@ app.controller('LoginController', function($scope, $state, api) {
 });
 
 
-app.controller('ProfileController', function($scope, $state, $stateParams, api) {
+app.controller('ProfileController', function($rootScope, $scope, $state, $stateParams, api) {
+  // $scope.isFollowing = true;
   api.profile($stateParams.userID)
-    .then(function(results) {
+    .then((results) => {
       $scope.results = results.data;
+      console.log(results.data);
+      console.log(results.data.user.followers.indexOf($rootScope.user_id));
+      if (results.data.user.followers.indexOf($rootScope.user_id) === -1) {
+        $scope.isFollowing = false;
+      }
+      else {
+        $scope.isFollowing = true;
+      }
+      console.log($scope.isFollowing);
     })
-    .catch(function(err) {
+    .catch((err) => {
       console.error('Error!');
       console.log(err.message);
     });
+  $scope.modifyFollowStatus = () => {
+    let data = {
+      userLoggedIn: $rootScope.user_id,
+      userToFollow: $stateParams.userID,
+      isFollowing: $scope.isFollowing
+    };
+    api.modifyFollowStatus(data)
+      .then(() => {
+        $state.go($state.current, {}, {reload: true});
+      });
+  }
 });
 
 
@@ -160,13 +186,13 @@ app.controller('SignupController', function($scope, $state, api) {
       password: $scope.password
     };
     api.signup(data)
-      .then(function(results) {
+      .then((results) => {
         return results;
       })
-      .then(function() {
+      .then(() => {
         return api.login(data);
       })
-      .then(function() {
+      .then(() => {
         $state.go('global');
       })
       .catch(function(err) {

@@ -31,20 +31,14 @@ body {
 
 .logo {
   position: fixed;
-  height: 100%;
-  top: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.logo h1 {
+  right: 0px;
   color: #aa7da5;
   font-family: 'Quicksand', sans-serif;
-  font-size: 25vh;
-  letter-spacing: 3rem;
-  text-align: right;
+  font-size: 4rem;
+  letter-spacing: 2rem;
+  text-align: center;
+  transform: rotate(270deg);
+  transform-origin: right bottom;
 }
 
 h1, h3, h4, h5, h6, ul, li {
@@ -146,3 +140,11 @@ nav li a {
 /*=======================
 MEDIA QUERIES
 =======================*/
+
+@media screen and (min-height: 770px) {
+
+  .logo {
+    font-size: 6rem;
+  }
+
+}

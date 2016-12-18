@@ -7,13 +7,15 @@
                 <p class="four columns">{{results.user.following.length}} following</p>
                 <p class="four columns">{{results.user.followers.length}} followers</p>
             </div>
-
             <div class="btn-div four-columns">
-                <button class="button-primary">Roll with this cat</button>
+                <button ng-click="modifyFollowStatus()" class="button-primary">
+                    <span ng-hide="isFollowing">Roll with this cat</span>
+                    <span ng-show="isFollowing">Let this cat go</span>
+                </button>
             </div>
         </div>
     </div>
-    <!-- <div class="row">
+    <div class="row">
         <div class="six columns">
             <h3>Following ({{results.user.following.length}})</h3>
             <ul>
@@ -36,7 +38,7 @@
                 </li>
             </ul>
         </div>
-    </div> -->
+    </div>
     <div class="row">
         <ul>
             <li ng-class="{'user-tweet': tweet.user_id === user_id}" class="tweet" ng-repeat="tweet in results.tweets">
